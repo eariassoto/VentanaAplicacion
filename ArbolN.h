@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <list>
 #include <string.h>
 
@@ -12,7 +13,7 @@ typedef char               id;
 typedef string             codigo;
 typedef pair<char, string> idCodigo;
 
-struct Nodo {
+class Nodo {
     friend class ArbolN;
     friend class Controlador;
     friend class Analizador;
@@ -27,12 +28,33 @@ public:
     }
     ~Nodo() {
     }
+    
+    string obtenerNombreClase(){
+        string str(dato.second);
+        myReplace(str, "public", "");
+        myReplace(str, "class", "");
+        str.erase(remove(str.begin(), str.end(), (char)13), str.end());
+        str.erase(remove(str.begin(), str.end(), (char)10), str.end());
+        str.erase(remove(str.begin(), str.end(), '\t'), str.end());
+        str.erase(remove(str.begin(), str.end(), ' '), str.end());
+        return str;    
+    }
 
 private:
 
     idCodigo dato;
     vector<Nodo*> hijos;
     Nodo* padre;
+    
+// codigo tomado de http://stackoverflow.com/questions/1494399/how-do-i-search-find-and-replace-in-a-standard-string
+    void myReplace(std::string& str, const std::string& oldStr, const std::string& newStr){
+        size_t pos = 0;
+        while((pos = str.find(oldStr, pos)) != std::string::npos){
+            str.replace(pos, oldStr.length(), newStr);
+            pos += newStr.length();
+        }
+    }
+//fin cita
 };
 
 class ArbolN  {
@@ -57,6 +79,7 @@ public:
     int            cantidadNodos();
     int            altura();
     pair<int, int> anchuraMaxima();
+    pair<int, int> anchuraMaximaNodo(Nodo*);
     int            anchuraPromedio();
     int            contarNodosPorId(Nodo*, id);
     void           imprimirArbol(Nodo* n);

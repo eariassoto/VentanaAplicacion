@@ -65,16 +65,17 @@ private:
     //GUI Control Declaration Start and GUI Control Declaration End.
     //wxDev-C++ will remove them. Add custom code after the block.
     ////GUI Control Declaration Start
-    wxMenuBar *WxMenuBar1;
-    wxTreeCtrl *arbol;
-    wxStyledTextCtrl *txtCodigo;
-    wxStaticText *WxStaticText3;
-    wxStaticText *WxStaticText2;
-    wxStaticText *WxStaticText1;
-    wxTextCtrl *txtAreaRes;
-    wxButton *btnAnalizar;
+		wxMenuBar *WxMenuBar1;
+		wxTreeCtrl *arbol;
+		wxStyledTextCtrl *txtCodigo;
+		wxStaticText *WxStaticText3;
+		wxStaticText *WxStaticText2;
+		wxStaticText *WxStaticText1;
+		wxTextCtrl *txtAreaRes;
+		wxButton *btnAnalizar;
     ////GUI Control Declaration End
-    wxMenu *archivo;
+    wxMenu* archivo;
+    wxMenu* demos;
     Controlador* controlador;
 
 private:
@@ -85,13 +86,13 @@ private:
     enum
     {
         ////GUI Enum Control ID Start
-        ID_ARBOL = 11,
-        ID_TXTCODIGO = 10,
-        ID_WXSTATICTEXT3 = 8,
-        ID_WXSTATICTEXT2 = 7,
-        ID_WXSTATICTEXT1 = 6,
-        ID_TXTAREARES = 5,
-        ID_BTNANALIZAR = 3,
+			ID_ARBOL = 11,
+			ID_TXTCODIGO = 10,
+			ID_WXSTATICTEXT3 = 8,
+			ID_WXSTATICTEXT2 = 7,
+			ID_WXSTATICTEXT1 = 6,
+			ID_TXTAREARES = 5,
+			ID_BTNANALIZAR = 3,
         ////GUI Enum Control ID End
         ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
     };

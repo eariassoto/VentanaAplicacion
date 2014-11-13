@@ -155,7 +155,7 @@ char Analizador::actualizarActual(char actual,int contadorLlaves) {
         switch(contadorLlaves) {
         case 0:
         {
-            actual=0;
+            actual= '0';
         }
         break;
         case 1:

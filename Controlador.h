@@ -34,11 +34,11 @@ class Controlador: public wxEvtHandler
 {
 public:
     Controlador();
-    void SetArbol(wxTreeCtrl*, wxTextCtrl*, const char*);
-    void SetCodigo(wxString);
-    void imprimirArbol(wxTextCtrl*, Nodo*);
-    void imprimirArbol2(wxTreeCtrl*, wxTreeItemId, Nodo*, bool);
-
+    void   SetArbol(wxTreeCtrl*, wxTextCtrl*, const char*);
+    void   imprimirArbol(wxTextCtrl*, Nodo*);
+    void   imprimirArbol2(wxTreeCtrl*, wxTreeItemId, Nodo*, bool);
+    string analizarAtributosMetodos(ArbolN, Nodo*);
+    
 private:
     wxString codigo;
 };

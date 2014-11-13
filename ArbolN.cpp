@@ -148,11 +148,15 @@ int ArbolN::anchura(Nodo* n, int nivel) {
 }
 
 pair<int, int> ArbolN::anchuraMaxima() {
+    return anchuraMaximaNodo(raiz);
+}
+
+pair<int, int> ArbolN::anchuraMaximaNodo(Nodo* n) {
     int anchMax = 0, nivelMax = 0;
     int ancho;
-    int alt = altura(raiz);
+    int alt = altura(n);
     for(int i = 0; i < alt; i++) {
-        ancho = anchura(raiz, i);
+        ancho = anchura(n, i);
         if(ancho > anchMax) {
             nivelMax = i;
             anchMax = ancho;
