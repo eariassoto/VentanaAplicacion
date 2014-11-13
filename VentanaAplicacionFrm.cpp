@@ -101,7 +101,7 @@ void VentanaAplicacionFrm::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void VentanaAplicacionFrm::OnSave(wxCommandEvent& WXUNUSED(event))
 {
-    if(txtAreaRes.GetValue() != "")
+    if(txtAreaRes->GetValue() != "")
         txtAreaRes->SaveFile("Reporte.txt", wxTEXT_ALIGNMENT_DEFAULT);
 }
 

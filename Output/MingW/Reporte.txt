@@ -1,0 +1,6 @@
+Análisis del código:
+Cantidad de metodos: 2
+Cantidad de atributos: 4
+Profundidad del código (altura del arbol): 5
+Nivel en el max anidamiento (anch maxima): 3
+Anchura Promedio: 2
