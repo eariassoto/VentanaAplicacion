@@ -82,7 +82,10 @@ public:
     pair<int, int> anchuraMaximaNodo(Nodo*);
     int            anchuraPromedio();
     int            contarNodosPorId(Nodo*, id);
+    int            contarHijosPorId(Nodo*, id);
     void           imprimirArbol(Nodo* n);
+    
+    bool sonIguales(Nodo*, Nodo*);
 
 
 private:

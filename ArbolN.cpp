@@ -186,6 +186,14 @@ int ArbolN::contarNodosPorId(Nodo* n, id idBuscar) {
     }
     return c;
 }
+int ArbolN::contarHijosPorId(Nodo* n, id idBuscar) {
+    int c = 0;
+    for(int i = 0, j = n->hijos.size(); i < j; i++) {
+        if(n->hijos[i]->dato.first == idBuscar)
+            c++;
+    }
+    return c;
+}
 
 void ArbolN::imprimirArbol(Nodo* n) {
     cout << n->dato.first << " " << n->dato.second << endl;
@@ -196,4 +204,24 @@ void ArbolN::imprimirArbol(Nodo* n) {
         imprimirArbol((*it));
     }
     cout<<"]"<<endl;
+}
+
+bool ArbolN::sonIguales(Nodo* n1, Nodo* n2){
+    if(n1->dato == n2->dato){
+        return true;    
+    }else{
+        if(n1->hijos.size() == n2->hijos.size()){
+            vector<Nodo*>::iterator it1 = n1->hijos.begin();
+            vector<Nodo*>::iterator itFin = n1->hijos.end();
+            vector<Nodo*>::iterator it2 = n2->hijos.begin();
+            bool resultado = true;
+            while(resultado == true && it1!=itFin) {
+                resultado = sonIguales((*it1), (*it2));
+                it1++;
+                it2++;
+            }
+        }else{
+            return false;
+        }    
+    }
 }

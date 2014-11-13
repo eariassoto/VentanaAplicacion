@@ -1,4 +1,15 @@
 #include "Analizador.h"
+#include <sstream>
+
+//tomado de http://stackoverflow.com/questions/5590381/easiest-way-to-convert-int-to-string-in-c
+template <typename T>
+string NumberToString ( T Number )
+{
+    ostringstream ss;
+    ss << Number;
+    return ss.str();
+}
+//fin cita
 
 Analizador::Analizador()
 {
@@ -345,6 +356,64 @@ Nodo * Analizador::agregarClase_Atributo(pair<char,string> dato) {
     //cout<<actual<<", "<<lineaActual<<endl;
     Nodo * n=0;
     Nodo* raiz=arbolAnalizador.raiz;
-    n=arbolAnalizador.agregarDato((raiz),dato);
+    n = arbolAnalizador.agregarDato((raiz),dato);
     return n;
+}
+
+string Analizador::generarAnalisis(){
+    string analisis = "";
+    
+    analisis += "Análisis del código:\n";
+    string str;
+    
+    str = analizarProfundidadCodigo();
+    analisis += str;
+    
+    analisis += "\nAnálisis por clases:\n";
+    
+    Nodo* raiz = arbolAnalizador.obtenerRaiz();
+    vector<Nodo*>::iterator it = raiz->hijos.begin();
+    vector<Nodo*>::iterator itFin = raiz->hijos.end();
+    
+    for(; it!=itFin; it++) {
+        str = "Clase " + (*it)->obtenerNombreClase() +":\n"; 
+        analisis += str;
+        str = analizarAtributosMetodos(*it);
+        analisis += str;
+        
+        str = analizarMaximoAnidamiento(*it);
+        analisis += str;
+        
+        analisis += "\n";
+    }
+    
+    return analisis;
+}
+
+string Analizador::analizarAtributosMetodos(Nodo* n){
+    string s = "";
+    int atributos, metodos;
+    atributos = arbolAnalizador.contarNodosPorId(n, 'A');
+    metodos = arbolAnalizador.contarNodosPorId(n, 'M');   
+    if(atributos > metodos){
+        s = "Esta clase posee mas atributos que métodos, posiblemente sea una clase contenedora.\n";    
+    }else if(atributos == metodos){
+        s = "Esta clase posee igual número de métodos que atributos, posiblemente sea una clase que modele algún comportamiento.\n";  
+    }else{
+        s = "Esta clase posee mas métodos que atributos, posiblemente sea una clase que modele algún comportamiento.\n";  
+    }
+    return s;
+}
+
+string Analizador::analizarProfundidadCodigo(){
+    return "Profundidad del código (altura del arbol): " + NumberToString(arbolAnalizador.altura()) + string("\n");
+}
+
+string Analizador::analizarMaximoAnidamiento(Nodo* n){
+    pair<int, int> anch = arbolAnalizador.anchuraMaximaNodo(n);
+    return "Nivel de máximo anidamiento: " + NumberToString(anch.first) + " con un ancho de " + NumberToString(anch.second) + string("\n");     
+}
+
+ArbolN Analizador::obtenerArbol(){
+    return arbolAnalizador;
 }

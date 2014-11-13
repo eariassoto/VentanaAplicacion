@@ -17,7 +17,7 @@ class Analizador
 public:
     Analizador();
     ~Analizador();
-    ArbolN arbolAnalizador;
+    
 
     void analizarCodigo(const char*);
     char actualizarActual(char, int);
@@ -31,10 +31,16 @@ public:
     Nodo* agregarClase_Atributo(pair<char,string>);
 
     void imprimirArbol(Nodo*);
+    
+    //agregado emma
+    ArbolN obtenerArbol();
+    string generarAnalisis();
+    string analizarAtributosMetodos(Nodo*);
+    string analizarProfundidadCodigo();
+    string analizarMaximoAnidamiento(Nodo*);
 
-
-protected:
 private:
+    ArbolN arbolAnalizador;
 };
 
 #endif // ANALIZADOR_H
