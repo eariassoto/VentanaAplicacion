@@ -206,11 +206,11 @@ void ArbolN::imprimirArbol(Nodo* n) {
     cout<<"]"<<endl;
 }
 
-bool ArbolN::sonIguales(Nodo* n1, Nodo* n2){
-    if(n1->dato == n2->dato){
-        return true;    
-    }else{
-        if(n1->hijos.size() == n2->hijos.size()){
+bool ArbolN::sonIguales(Nodo* n1, Nodo* n2) {
+    if(n1->dato == n2->dato) {
+        return true;
+    } else {
+        if(n1->hijos.size() == n2->hijos.size()) {
             vector<Nodo*>::iterator it1 = n1->hijos.begin();
             vector<Nodo*>::iterator itFin = n1->hijos.end();
             vector<Nodo*>::iterator it2 = n2->hijos.begin();
@@ -220,8 +220,34 @@ bool ArbolN::sonIguales(Nodo* n1, Nodo* n2){
                 it1++;
                 it2++;
             }
-        }else{
+        } else {
             return false;
-        }    
+        }
     }
+}
+/**
+NUEVO:
+**/
+int ArbolN::contarNodosSA(Nodo * n) {
+    int c = 1;
+    for(int i = 0, j = n->hijos.size(); i < j; i++) {
+        c += contarNodosSA(n->hijos[i]);
+    }
+    return c;
+}
+
+int ArbolN::cantidadNodosCon(Nodo * n,string entrada) {
+    int c;
+    string d2=n->dato.second;
+    if(d2.find(entrada) != string::npos) {
+        c=1;
+    }
+    else {
+        c=0;
+    }
+    for(int i = 0, j = n->hijos.size(); i < j; i++) {
+        c += cantidadNodosCon(n->hijos[i],entrada);
+    }
+    return c;
+
 }

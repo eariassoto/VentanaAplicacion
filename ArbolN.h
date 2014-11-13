@@ -28,16 +28,53 @@ public:
     }
     ~Nodo() {
     }
-    
-    string obtenerNombreClase(){
+    /**
+    NUEVA:
+    */
+    vector<Nodo *> obtenerHijos() {
+        return hijos;
+    }
+
+    string obtenerNombreClase() {
         string str(dato.second);
         myReplace(str, "public", "");
+        myReplace(str, "private", "");
+        myReplace(str, "static", "");
         myReplace(str, "class", "");
         str.erase(remove(str.begin(), str.end(), (char)13), str.end());
         str.erase(remove(str.begin(), str.end(), (char)10), str.end());
         str.erase(remove(str.begin(), str.end(), '\t'), str.end());
         str.erase(remove(str.begin(), str.end(), ' '), str.end());
-        return str;    
+        return str;
+    }
+
+    string obtenerNombreMetodo() {
+        string str(dato.second);
+        myReplace(str, "public", "");
+        myReplace(str, "private", "");
+        myReplace(str, "static", "");
+
+        myReplace(str, "void", "");
+        myReplace(str, "short", "");
+        myReplace(str, "int", "");
+        myReplace(str, "float", "");
+        myReplace(str, "double", "");
+        myReplace(str, "long", "");
+        myReplace(str, "char", "");
+        myReplace(str, "bool", "");
+
+        myReplace(str, "string", ""); //std::string
+        myReplace(str, "std", "");
+        myReplace(str, "::", "");
+
+        myReplace(str, "unsigned", "");
+        myReplace(str, "signed", "");
+
+        str.erase(remove(str.begin(), str.end(), (char)13), str.end());
+        str.erase(remove(str.begin(), str.end(), (char)10), str.end());
+        str.erase(remove(str.begin(), str.end(), '\t'), str.end());
+        str.erase(remove(str.begin(), str.end(), ' '), str.end());
+        return str;
     }
 
 private:
@@ -45,11 +82,11 @@ private:
     idCodigo dato;
     vector<Nodo*> hijos;
     Nodo* padre;
-    
+
 // codigo tomado de http://stackoverflow.com/questions/1494399/how-do-i-search-find-and-replace-in-a-standard-string
-    void myReplace(std::string& str, const std::string& oldStr, const std::string& newStr){
+    void myReplace(std::string& str, const std::string& oldStr, const std::string& newStr) {
         size_t pos = 0;
-        while((pos = str.find(oldStr, pos)) != std::string::npos){
+        while((pos = str.find(oldStr, pos)) != std::string::npos) {
             str.replace(pos, oldStr.length(), newStr);
             pos += newStr.length();
         }
@@ -84,8 +121,13 @@ public:
     int            contarNodosPorId(Nodo*, id);
     int            contarHijosPorId(Nodo*, id);
     void           imprimirArbol(Nodo* n);
-    
-    bool sonIguales(Nodo*, Nodo*);
+
+    bool           sonIguales(Nodo*, Nodo*);
+    /**NUEVO:
+    **/
+    int            contarNodosSA(Nodo * n);
+    int            cantidadNodosCon(Nodo *,string entrada);
+
 
 
 private:

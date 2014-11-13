@@ -35,10 +35,9 @@ class Controlador: public wxEvtHandler
 public:
     Controlador();
     void   SetArbol(wxTreeCtrl*, wxTextCtrl*, const char*);
-    void   imprimirArbol(wxTextCtrl*, Nodo*);
-    void   imprimirArbol2(wxTreeCtrl*, wxTreeItemId, Nodo*, bool);
-    
-    
+    void   imprimirwxTree(wxTreeCtrl*, wxTreeItemId, Nodo*, bool);
+
+
 private:
     wxString codigo;
 };
