@@ -64,7 +64,7 @@ void Analizador::analizarCodigo(const char* entrada) {
             else {
                 if(actual == METODO || actual == CICLO) {
                     if((hilera[i+1] == '{')) {
-                        inst r= conseguirHileraCiclo(hilera,i);
+                        instr = conseguirHileraCiclo(hilera,i);
                         pair<char,string> dato = make_pair(CICLO, instr);
                         ciclo = arbolAnalizador.agregarDato(metodo,dato);
                         actual = CICLO;
@@ -76,7 +76,7 @@ void Analizador::analizarCodigo(const char* entrada) {
         case';':
         {
             if(actual==CLASE) {
-                inst r= conseguirHileraAtributo(hilera,i);
+                instr = conseguirHileraAtributo(hilera,i);
                 pair<char,string> dato = make_pair(ATRIBUTO, instr);
                 arbolAnalizador.agregarDato(clase, dato);
             }
@@ -304,22 +304,22 @@ string Analizador::conseguirHileraLinea_Llamado(string hilera, int indice) {
     int tamH = hilera.size();
     for(int i=0; i<tamH; i++) {
         if(hilera[i] != ';' && contadorLlaves >= 2) {
-            respuesta+=hilera[i];
+            respuesta += hilera[i];
         }
-        if(indice<=i) {
+        if(indice <= i) {
             i= hilera.size();
         }
 
-        if(hilera[i]=='{') {
-            respuesta="";
+        if(hilera[i] == '{') {
+            respuesta = "";
             contadorLlaves++;
         }
-        if(hilera[i]=='}') {
+        if(hilera[i] == '}') {
             contadorLlaves--;
-            respuesta="";
+            respuesta = "";
         }
-        if(hilera[i]==';') {
-            respuesta="";
+        if(hilera[i] == ';') {
+            respuesta = "";
         }
     }
     return respuesta;
@@ -387,7 +387,6 @@ string Analizador::analizarMetodosMorfosis(Nodo* n) {
     vector<Nodo*> hij = n->hijos;
     vector<Nodo*>::iterator it = hij.begin(), itFin = hij.end(), it2, itFin2;
 
-    //con esto ontengo solo los metodos de la clase
     for(; it!=itFin; it++) {
         if((*it)->dato.first == 'M') {
             vec.push_back(*it);
@@ -413,10 +412,6 @@ string Analizador::analizarMetodosMorfosis(Nodo* n) {
     }
     return respuesta;
 }
-
-/**
-6. Uso de atributos (Cantidad de nodos que usan atributos / cantidad de nodos de los métodos)
-**/
 
 string Analizador::usoAtributosMetodos(Nodo* clase) {
     string respuesta="";
@@ -458,23 +453,18 @@ string Analizador::usoAtributosMetodos(Nodo* clase) {
 
 }
 string Analizador::conseguirUltimaParte(string s) {
-    string respuesta="";
-    int tam=s.size();
+    string respuesta = "";
+    int tam = s.size();
     for(int i=(tam-1); i>=0; i--) {
-        if(s[i]==' ') {
-            i=-1;
+        if(s[i] == ' ') {
+            i =- 1;
         }
         else {
-            respuesta=s[i]+respuesta;
+            respuesta = s[i] + respuesta;
         }
     }
     return respuesta;
 }
-
-/**
-7. Uso de atributos (Cantidad de nodos que usan atributos / cantidad total de nodos)
-
-**/
 
 string Analizador::usoAtributosTotal(Nodo* clase) {
     string respuesta = "";
@@ -502,38 +492,34 @@ string Analizador::usoAtributosTotal(Nodo* clase) {
 }
 
 int Analizador::nodosUsanAtributos(ArbolN arbol, Nodo * clase) {
-    int cantidadNodosUsanAtributos=0;
+    int cantidadNodosUsanAtributos = 0;
     vector<Nodo*> hijos = clase->obtenerHijos();
-    vector<Nodo * > metodos;
-    vector<Nodo *> atributos;
-    int tamHijosClase=hijos.size();
+    vector<Nodo*> metodos;
+    vector<Nodo*> atributos;
+    int tamHijosClase = hijos.size();
+    
     for(int i =0; i<tamHijosClase; i++) {
-        if(hijos[i]->dato.first=='M') {
+        if(hijos[i]->dato.first == 'M') {
             metodos.push_back(hijos[i]);
         }
         else {
-            if(hijos[i]->dato.first=='A') {
+            if(hijos[i]->dato.first == 'A') {
                 atributos.push_back(hijos[i]);
             }
         }
     }
-    int tamMetodos= metodos.size();
-    int tamAtributos=atributos.size();
+    int tamMetodos = metodos.size();
+    int tamAtributos = atributos.size();
     for(int i=0; i<tamAtributos; i++) {
-        string lineaAtr= atributos[i]->dato.second;
-        lineaAtr=conseguirUltimaParte(lineaAtr);
+        string lineaAtr = atributos[i]->dato.second;
+        lineaAtr = conseguirUltimaParte(lineaAtr);
+        
         for(int j=0; j<tamMetodos; j++) {
             cantidadNodosUsanAtributos+=arbol.cantidadNodosCon(metodos[j],lineaAtr);
         }
     }
     return cantidadNodosUsanAtributos;
 }
-
-/**
-8. Cantidad de llamados por método (se puede reportar en un gráfico)
-Lo interpreto como los llamados que un método tiene en su cuerpo
-No como en toda la clase cuantas veces se llama a x metodo, que peretenece a la clase.
-*/
 
 string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
     string respuesta = "* Análisis de llamados a métodos:\n";
@@ -547,7 +533,7 @@ string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
             metodos.push_back(hijos[i]);
         }
     }
-    int tamMetodos= metodos.size();
+    int tamMetodos = metodos.size();
     for(int i=0; i<tamMetodos; i++) {
         llamadosRespectivos.push_back(arbolAnalizador.contarNodosPorId(metodos[i], 'L'));
     }
@@ -558,39 +544,35 @@ string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
     return respuesta;
 }
 
-/**
-Nuevo: 13-11-14
-*/
-/**
-Extra: saber que metodos son recursivos
-*/
-
 string Analizador::metodosRecursivos(Nodo* clase) {
     string respuesta = "* Análisis de recursividad en métodos:\n";
     vector<Nodo*> hijos = clase->obtenerHijos();
-    vector<Nodo * > metodos;
-    int tamHijosClase=hijos.size();
+    vector<Nodo*> metodos;
+    int tamHijosClase = hijos.size();
+    
     for(int i =0; i<tamHijosClase; i++) {
         if(hijos[i]->dato.first=='M') {
             metodos.push_back(hijos[i]);
         }
     }
-    int tamMetodos= metodos.size();
+    
+    int tamMetodos = metodos.size();
     string nombreMetodo = "";
     int cantidadLlamadosRecursicos;
     for(int i=0; i<tamMetodos; i++) {
-        cantidadLlamadosRecursicos=0;
-        nombreMetodo= metodos[i]->obtenerNombreMetodoSinParentesis();
-        vector<Nodo *> hijosMet= metodos[i]->hijos;
-        int tamHijosMet= hijosMet.size();
+        cantidadLlamadosRecursicos = 0;
+        nombreMetodo = metodos[i]->obtenerNombreMetodoSinParentesis();
+        vector<Nodo*> hijosMet= metodos[i]->hijos;
+        int tamHijosMet = hijosMet.size();
+        
         for(int j=0; j<tamHijosMet; j++) {
             cantidadLlamadosRecursicos += arbolAnalizador.cantidadNodosConString(hijosMet[j], nombreMetodo+"(");
         }
-        if(cantidadLlamadosRecursicos>0) {
+        if(cantidadLlamadosRecursicos > 0) {
             respuesta += "-> El método "+nombreMetodo+" es recursivo.\n";
         }
         else {
-            if(cantidadLlamadosRecursicos==0) {
+            if(cantidadLlamadosRecursicos == 0) {
                 respuesta += "-> El método "+nombreMetodo+" NO es recursivo.\n";
             }
         }
@@ -603,7 +585,7 @@ Extra: saber si una clase hereda
 */
 string Analizador::metodosConHerencia(Nodo* clase) {
     string respuesta = "* Análisis de herencia: ";
-    string nombreClase=clase->obtenerNombreClase();
+    string nombreClase = clase->obtenerNombreClase();
     if(nombreClase.find(":") != string::npos) {
         respuesta += "La clase hereda.\n";
     }
