@@ -1,7 +1,7 @@
 # Project: VentanaAplicacion
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 13/11/14 08:33
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 13/11/14 23:03
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe

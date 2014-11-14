@@ -251,3 +251,19 @@ int ArbolN::cantidadNodosCon(Nodo * n,string entrada) {
     return c;
 
 }
+
+int ArbolN::cantidadNodosConString(Nodo* n, string entrada) {
+    int c;
+    string d2=n->dato.second;
+    if(d2.find(entrada) != string::npos) {
+        c=1;
+    }
+    else {
+        c=0;
+    }
+    for(int i = 0, j = n->hijos.size(); i < j; i++) {
+        c += cantidadNodosConString(n->hijos[i],entrada);
+    }
+    return c;
+
+}

@@ -47,14 +47,14 @@ public:
     string usoAtributosTotal(Nodo*);
     int nodosUsanAtributos(ArbolN, Nodo*);
     string frecuenciaUsoMetodos(Nodo*);
-
+    
     /**
     EXTRA
     */
-
+    
     string metodosRecursivos(Nodo*);
     string metodosConHerencia(Nodo*);
-
+        
 private:
     ArbolN arbolAnalizador;
 };

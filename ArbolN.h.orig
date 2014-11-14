@@ -28,7 +28,7 @@ public:
     }
     ~Nodo() {
     }
-
+    
     vector<Nodo *> obtenerHijos() {
         return hijos;
     }
@@ -72,19 +72,19 @@ public:
         str.erase(remove(str.begin(), str.end(), (char)10), str.end());
         str.erase(remove(str.begin(), str.end(), '\t'), str.end());
         str.erase(remove(str.begin(), str.end(), ' '), str.end());
-
+        
         return str;
     }
-
-    string obtenerNombreMetodoSinParentesis() {
+    
+    string obtenerNombreMetodoSinParentesis(){
         string r= obtenerNombreMetodo();
         string r1="";
         int tamR=r.size();
-        for(int i=0; i<tamR; i++) {
-            if(r[i]=='(') {
+        for(int i=0;i<tamR;i++){
+            if(r[i]=='('){
                 i=tamR;
             }
-            else {
+            else{
                 r1+=r[i];
             }
         }

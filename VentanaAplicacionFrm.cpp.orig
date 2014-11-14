@@ -86,7 +86,7 @@ void VentanaAplicacionFrm::CreateGUIControls()
 
     demos = new wxMenu;
     demos->Append(7, wxT("&Persona"));
-
+    
     WxMenuBar1->Append(archivo, wxT("&Archivo"));
     WxMenuBar1->Append(demos, wxT("&Demos"));
     SetMenuBar(WxMenuBar1);
