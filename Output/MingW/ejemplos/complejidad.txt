@@ -1,0 +1,23 @@
+class Complejidad{
+	public void ordenN(int n){
+		for(int i = 0; i < n; i++){
+			System;
+		}
+	}
+	public void ordenN2(int n){
+		for(int i = 0; i < n; i++){
+			for(int i = 0; i < n; i++){
+				System;
+			}
+		}
+	}
+	public void ordenN3(int n){
+		for(int i = 0; i < n; i++){
+			for(int i = 0; i < n; i++){
+				for(int i = 0; i < n; i++){
+					System;
+				}
+			}
+		}
+	}
+}

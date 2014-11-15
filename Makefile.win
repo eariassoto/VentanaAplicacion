@@ -1,14 +1,14 @@
 # Project: VentanaAplicacion
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 13/11/14 23:17
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 14/11/14 22:01
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = "windres.exe"
-OBJ       = Objects/MingW/VentanaAplicacionApp.o Objects/MingW/VentanaAplicacionFrm.o Objects/MingW/ArbolN.o Objects/MingW/Controlador.o Objects/MingW/Analizador.o Objects/MingW/VentanaAplicacion_private.res
-LINKOBJ   = "Objects/MingW/VentanaAplicacionApp.o" "Objects/MingW/VentanaAplicacionFrm.o" "Objects/MingW/ArbolN.o" "Objects/MingW/Controlador.o" "Objects/MingW/Analizador.o" Objects/MingW/VentanaAplicacion_private.res
+OBJ       = Objects/MingW/VentanaAplicacionApp.o Objects/MingW/VentanaAplicacionFrm.o Objects/MingW/Controlador.o Objects/MingW/Analizador.o Objects/MingW/ArbolAnalisis.o Objects/MingW/VentanaAplicacion_private.res
+LINKOBJ   = "Objects/MingW/VentanaAplicacionApp.o" "Objects/MingW/VentanaAplicacionFrm.o" "Objects/MingW/Controlador.o" "Objects/MingW/Analizador.o" "Objects/MingW/ArbolAnalisis.o" Objects/MingW/VentanaAplicacion_private.res
 LIBS      = -L"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/lib/wx/gcc_lib" -L"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/lib" -L"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/MinGW32/lib" -mwindows -l$(WXLIBNAME) -l$(WXLIBNAME)_gl -lwxscintilla -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  
 INCS      = -I"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/MinGW32/include"
 CXXINCS   = -I"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/MinGW32/include" -I"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/" -I"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/include/common" -I"C:/Users/Emmanuel/Downloads/wxDevCppP7-64b/wxDevCppP7-64b/App/devcpp/include"
@@ -36,20 +36,20 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "$(BIN)" $(LIBS) 
 
-Objects/MingW/VentanaAplicacionApp.o: $(GLOBALDEPS) VentanaAplicacionApp.cpp VentanaAplicacionApp.h VentanaAplicacionFrm.h Controlador.h ArbolN.h Controlador.h
+Objects/MingW/VentanaAplicacionApp.o: $(GLOBALDEPS) VentanaAplicacionApp.cpp VentanaAplicacionApp.h VentanaAplicacionFrm.h Controlador.h ArbolAnalisis.h Controlador.h
 	$(CPP) -c VentanaAplicacionApp.cpp -o Objects/MingW/VentanaAplicacionApp.o $(CXXFLAGS)
 
-Objects/MingW/VentanaAplicacionFrm.o: $(GLOBALDEPS) VentanaAplicacionFrm.cpp VentanaAplicacionFrm.h Controlador.h ArbolN.h
+Objects/MingW/VentanaAplicacionFrm.o: $(GLOBALDEPS) VentanaAplicacionFrm.cpp VentanaAplicacionFrm.h Controlador.h ArbolAnalisis.h
 	$(CPP) -c VentanaAplicacionFrm.cpp -o Objects/MingW/VentanaAplicacionFrm.o $(CXXFLAGS)
 
-Objects/MingW/ArbolN.o: $(GLOBALDEPS) ArbolN.cpp ArbolN.h
-	$(CPP) -c ArbolN.cpp -o Objects/MingW/ArbolN.o $(CXXFLAGS)
-
-Objects/MingW/Controlador.o: $(GLOBALDEPS) Controlador.cpp Controlador.h ArbolN.h Analizador.h ArbolN.h
+Objects/MingW/Controlador.o: $(GLOBALDEPS) Controlador.cpp Controlador.h ArbolAnalisis.h Analizador.h ArbolAnalisis.h
 	$(CPP) -c Controlador.cpp -o Objects/MingW/Controlador.o $(CXXFLAGS)
 
-Objects/MingW/Analizador.o: $(GLOBALDEPS) Analizador.cpp Analizador.h ArbolN.h
+Objects/MingW/Analizador.o: $(GLOBALDEPS) Analizador.cpp Analizador.h ArbolAnalisis.h
 	$(CPP) -c Analizador.cpp -o Objects/MingW/Analizador.o $(CXXFLAGS)
+
+Objects/MingW/ArbolAnalisis.o: $(GLOBALDEPS) ArbolAnalisis.cpp ArbolAnalisis.h
+	$(CPP) -c ArbolAnalisis.cpp -o Objects/MingW/ArbolAnalisis.o $(CXXFLAGS)
 
 Objects/MingW/VentanaAplicacion_private.res: Objects/MingW/VentanaAplicacion_private.rc VentanaAplicacionApp.rc 
 	$(WINDRES) --input-format=rc -o Objects/MingW/VentanaAplicacion_private.res $(RCINCS) Objects/MingW/VENTAN~1.RC -O coff

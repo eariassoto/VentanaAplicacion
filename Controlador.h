@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <string>
-#include "ArbolN.h"
+#include "ArbolAnalisis.h"
 
 using namespace std;
 

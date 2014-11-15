@@ -1,6 +1,32 @@
 Análisis del código:
-Cantidad de metodos: 0
-Cantidad de atributos: 0
-Profundidad del código (altura del arbol): 1
-Nivel en el max anidamiento (anch maxima): 0
-Anchura Promedio: 0
+* Profundidad del código (altura del arbol): 4
+
+Análisis por clases:
+Clase Persona:
+* Cantidad de nodos que usan métodos: 3
+* Cantidad de nodos que usan atributos: 2
+* Cantidad total de nodos: 7
+* Esta clase posee mas atributos que métodos, posiblemente sea una clase contenedora.
+* Nivel de máximo anidamiento: 2 con un ancho de 5
+* El método getNombre() y el método getEdad() son iguales morfológicamente.
+* Análisis de llamados a métodos:
+	-> Llamados a métodos en getNombre(): 0
+	-> Llamados a métodos en getEdad(): 0
+* Análisis de herencia: La clase NO hereda.
+* Análisis de recursividad en métodos:
+	-> El método getNombre NO es recursivo.
+	-> El método getEdad NO es recursivo.
+
+Clase Auto:
+* Cantidad de nodos que usan métodos: 1
+* Cantidad de nodos que usan atributos: 0
+* Cantidad total de nodos: 2
+* Esta clase posee mas métodos que atributos, posiblemente sea una clase que modele algún comportamiento.
+* Nivel de máximo anidamiento: 1 con un ancho de 1
+* Esta clase solo tiene un metodo y por lo tanto no se puede realizar el análisis morfológico de métodos.
+* Análisis de llamados a métodos:
+	-> Llamados a métodos en conducir(Personap): 1
+* Análisis de herencia: La clase NO hereda.
+* Análisis de recursividad en métodos:
+	-> El método conducir NO es recursivo.
+

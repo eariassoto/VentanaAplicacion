@@ -1,7 +1,7 @@
 #ifndef ANALIZADOR_H
 #define ANALIZADOR_H
 
-#include "ArbolN.h"
+#include "ArbolAnalisis.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -12,6 +12,8 @@ static const char METODO='M';
 static const char CICLO='B';
 static const char INSTRUCCION='I';
 static const char LLAMADO_METODO='L';
+static const char IF_ELSE= 'F';
+
 class Analizador
 {
 public:
@@ -20,8 +22,9 @@ public:
 
 
     void analizarCodigo(const char*);
-    char actualizarActual(char, int);
+    char actualizarActual(char actual,int contadorLlaves,bool estoyRestando, char idPadre);
 
+    string conseguirHileraIf_Else(string hilera,int indice);
     string conseguirHileraClase (string,int);
     string conseguirHileraMetodo(string,int);
     string conseguirHileraCiclo (string,int);
@@ -31,7 +34,7 @@ public:
     void imprimirArbol(Nodo*);
 
     //agregado emma
-    ArbolN obtenerArbol();
+    ArbolAnalisis obtenerArbol();
     string generarAnalisis();
     string analizarAtributosMetodos(Nodo*);
     string analizarProfundidadCodigo();
@@ -45,7 +48,7 @@ public:
     string usoAtributosMetodos(Nodo*);
     string conseguirUltimaParte(string);
     string usoAtributosTotal(Nodo*);
-    int nodosUsanAtributos(ArbolN, Nodo*);
+    int nodosUsanAtributos(ArbolAnalisis, Nodo*);
     string frecuenciaUsoMetodos(Nodo*);
 
     /**
@@ -54,9 +57,15 @@ public:
 
     string metodosRecursivos(Nodo*);
     string metodosConHerencia(Nodo*);
+    
+    /**
+    Metodo misterioso
+    */
 
+    string complejidadMetodos(Nodo*);
+    
 private:
-    ArbolN arbolAnalizador;
+    ArbolAnalisis arbolAnalizador;
 };
 
 #endif // ANALIZADOR_H

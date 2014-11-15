@@ -10,7 +10,7 @@ void Controlador::SetArbol(wxTreeCtrl* arbol, wxTextCtrl* txtAreaRes, const char
 
     Analizador analizador;
     analizador.analizarCodigo(hilera);
-    ArbolN arbolN = analizador.obtenerArbol();
+    ArbolAnalisis arbolN = analizador.obtenerArbol();
 
     txtAreaRes->Clear();
     txtAreaRes->AppendText(analizador.generarAnalisis());
@@ -34,7 +34,7 @@ void Controlador::imprimirwxTree(wxTreeCtrl* arbol, wxTreeItemId fatherId, Nodo*
     if(esRaiz)
         id = arbol->AppendItem(fatherId, "Código Fuente");
     else
-        id = arbol->AppendItem(fatherId, n->dato.first);
+        id = arbol->AppendItem(fatherId, n->obtenerId());
 
     vector<Nodo*>::iterator it = n->hijos.begin();
     vector<Nodo*>::iterator itFin = n->hijos.end();

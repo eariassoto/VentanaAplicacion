@@ -20,11 +20,18 @@ Analizador::~Analizador(){
     //dtor
 }
 
+/**
+    Nuevo: 14-11-14
+**/
 void Analizador::analizarCodigo(const char* entrada) {
     Nodo* clase = 0;
     Nodo* metodo = 0;
     Nodo* ciclo = 0;
+    Nodo* if_else= 0;
+
     char actual = '0';
+    int estamosEnIf =0;
+    int estamosEnFor=0;
 
     string hilera = entrada;
     string palabraClave = "class";
@@ -37,6 +44,7 @@ void Analizador::analizarCodigo(const char* entrada) {
         caracter = hilera[i];
         switch(caracter) {
         case 'c':
+        {
             if(i+6 < tamHilera ) {
                 {
                     string subHilera;
@@ -49,7 +57,60 @@ void Analizador::analizarCodigo(const char* entrada) {
                         Nodo* raiz=arbolAnalizador.obtenerRaiz();
                         clase = arbolAnalizador.agregarDato(raiz,dato);
                         actual = CLASE;
+                        estamosEnIf =0;
                     }
+                }
+            }
+        }
+        break;
+        case 'i':
+            {
+                if(hilera[i+1]== 'f' && hilera[i+2]=='('){
+                    instr = conseguirHileraIf_Else(hilera,i);
+                    pair<char,string> dato;
+                    if(actual==IF_ELSE){
+                        dato = make_pair(IF_ELSE, instr);
+                        if_else= arbolAnalizador.agregarDato(if_else,dato);
+                    }
+                    else{
+                        if(actual==METODO){
+                            dato = make_pair(IF_ELSE, instr);
+                            if_else= arbolAnalizador.agregarDato(metodo,dato);
+                        }
+                        else{
+                            if(actual==CICLO){
+                                dato = make_pair(IF_ELSE, instr);
+                                if_else= arbolAnalizador.agregarDato(ciclo,dato);
+                            }
+                        }
+                    }
+                    estamosEnIf=1;
+                }
+            }
+            break;
+            case 'e':
+                {
+                if(hilera[i+1]== 'l' && hilera[i+2]=='s' && hilera[i+3]== 'e'){
+                    instr = "else";
+                    pair<char,string> dato;
+                    if(actual==IF_ELSE){
+                        dato = make_pair(IF_ELSE, instr);
+                        if_else= arbolAnalizador.agregarDato(if_else,dato);
+                    }
+                    else{
+                        if(actual==METODO){
+                            dato = make_pair(IF_ELSE, instr);
+                            if_else= arbolAnalizador.agregarDato(metodo,dato);
+                        }
+                        else{
+                            if(actual==CICLO){
+                                dato = make_pair(IF_ELSE, instr);
+                                if_else= arbolAnalizador.agregarDato(ciclo,dato);
+                            }
+                        }
+                    }
+                    estamosEnIf=1;
+                    actual=IF_ELSE;
                 }
             }
             break;
@@ -57,30 +118,66 @@ void Analizador::analizarCodigo(const char* entrada) {
         {
             if(actual == CLASE) {
                 instr = conseguirHileraMetodo(hilera,i);
+                if(instr[0]=='f' && instr[1]=='o' && instr[2]=='r'){
+                    estamosEnFor=0;
+                }
                 pair<char,string> dato = make_pair(METODO, instr);
                 metodo = arbolAnalizador.agregarDato(clase,dato);
                 actual = METODO;
+                estamosEnIf =0;
             }
             else {
-                if(actual == METODO || actual == CICLO) {
+                if(actual == METODO || actual == CICLO || actual== IF_ELSE) {
                     if((hilera[i+1] == '{')) {
-                        instr = conseguirHileraCiclo(hilera,i);
-                        pair<char,string> dato = make_pair(CICLO, instr);
-                        ciclo = arbolAnalizador.agregarDato(metodo,dato);
+                        if(estamosEnIf==0){
+                            instr = conseguirHileraCiclo(hilera,i);
+                            pair<char,string> dato;
+                            if(actual==IF_ELSE){
+                                dato = make_pair(CICLO, instr);
+                                ciclo = arbolAnalizador.agregarDato(if_else,dato);
+                            }
+                            else{
+                                if(actual==METODO){
+                                    dato = make_pair(CICLO, instr);
+                                    ciclo = arbolAnalizador.agregarDato(metodo,dato);
+                                }
+                                else{
+                                    if(actual==CICLO){
+                                        dato = make_pair(CICLO, instr);
+                                        ciclo = arbolAnalizador.agregarDato(ciclo,dato);
+                                    }
+                                }
+                            }
                         actual = CICLO;
+                        }
+                        else{
+                            if(estamosEnIf==1){
+                                cout<<"Se acaba de agrgegar if else"<<endl;
+                                actual =IF_ELSE;
+                            }
+                        }
                     }
                 }
             }
         }
         break;
+        case 'f':
+        {
+            if(hilera[i+1]=='o' && hilera[i+2]== 'r'){
+                estamosEnFor=1;
+            }
+        }
+        break;
         case';':
         {
+            if(estamosEnFor==1){ }
+            else{
             if(actual==CLASE) {
                 instr = conseguirHileraAtributo(hilera,i);
                 pair<char,string> dato = make_pair(ATRIBUTO, instr);
                 arbolAnalizador.agregarDato(clase, dato);
             }
-            else {
+            else{
                 if(hilera[i-1]==')') {
                     instr = conseguirHileraLinea_Llamado(hilera,i);
                     pair<char,string> dato = make_pair(LLAMADO_METODO, instr);
@@ -91,9 +188,14 @@ void Analizador::analizarCodigo(const char* entrada) {
                         if(actual == METODO) {
                             arbolAnalizador.agregarDato(metodo,dato);
                         }
+                        else{
+                            if(actual==IF_ELSE){
+                                arbolAnalizador.agregarDato(if_else,dato);
+                            }
+                        }
                     }
                 }
-                else {
+                else{
                     instr = conseguirHileraLinea_Llamado(hilera, i);
                     pair<char,string> dato = make_pair(INSTRUCCION, instr);
                     if(actual == CICLO) {
@@ -104,7 +206,13 @@ void Analizador::analizarCodigo(const char* entrada) {
                         if(actual == METODO) {
                             arbolAnalizador.agregarDato(metodo,dato);
                         }
+                        else{
+                            if(actual== IF_ELSE){
+                                arbolAnalizador.agregarDato(if_else,dato);
+                            }
+                        }
                     }
+                }
                 }
             }
         }
@@ -112,21 +220,46 @@ void Analizador::analizarCodigo(const char* entrada) {
         case '{':
         {
             contadorLlaves++;
-            actual = actualizarActual(actual,contadorLlaves);
+            /**
+            CREO QUE ESTO SE PUEDE COMENTAR, CREO QUE NO
+            */
+            actual = actualizarActual(actual,contadorLlaves,false,'0');
 
         }
         break;
         case '}':
         {
             contadorLlaves--;
-
+            char idPadre='0';
             if(actual == CICLO) {
-                if(ciclo != 0) {
-                    ciclo = arbolAnalizador.padre(ciclo,ciclo->dato);
+                Nodo * n = arbolAnalizador.padre(ciclo,ciclo->obtenerDato());
+                if(n != 0) {
+                    idPadre=n->obtenerDato().first;
+                    if(idPadre==CICLO){
+                        ciclo= n;
+                    }
+                    else{
+                        if(idPadre==IF_ELSE){
+                            if_else=n;
+                        }
+                    }
                 }
             }
-            actual = actualizarActual(actual, contadorLlaves);
-
+            if(actual == IF_ELSE) {
+                Nodo * n = arbolAnalizador.padre(if_else,if_else->obtenerDato());
+                if(n != 0) {
+                    idPadre=n->obtenerDato().first;
+                    if(idPadre==CICLO){
+                        ciclo= n;
+                    }
+                    else{
+                        if(idPadre==IF_ELSE){
+                            if_else=n;
+                        }
+                    }
+                }
+            }
+            actual = actualizarActual(actual, contadorLlaves,true,idPadre);
         }
         break;
         default:
@@ -134,7 +267,11 @@ void Analizador::analizarCodigo(const char* entrada) {
         }
     }
 }
-char Analizador::actualizarActual(char actual,int contadorLlaves) {
+
+/**
+Nuevo: 14-11-14
+**/
+char Analizador::actualizarActual(char actual,int contadorLlaves,bool estoyRestando, char idPadre) {
     switch (actual) {
     case CLASE:
     {
@@ -172,7 +309,7 @@ char Analizador::actualizarActual(char actual,int contadorLlaves) {
         break;
         case 3:
         {
-            actual = CICLO;
+            actual = actual;
         }
         break;
         }
@@ -180,8 +317,25 @@ char Analizador::actualizarActual(char actual,int contadorLlaves) {
     break;
     case CICLO:
     {
-        if(contadorLlaves == 2) {
-            actual = METODO;
+        if(estoyRestando){
+            actual=idPadre;
+        }
+        else{
+            if(contadorLlaves == 2) {
+                actual = METODO;
+            }
+        }
+    }
+    break;
+    case IF_ELSE:
+    {
+        if(estoyRestando){
+            actual=idPadre;
+        }
+        else{
+            if(contadorLlaves == 2) {
+                actual = METODO;
+            }
         }
     }
     break;
@@ -189,6 +343,38 @@ char Analizador::actualizarActual(char actual,int contadorLlaves) {
         break;
     }
     return actual;
+}
+
+/**
+    Nuevo: 14-11-14
+**/
+string Analizador::conseguirHileraIf_Else(string hilera,int indice){
+    string respuesta= "";
+    int contadorLlaves = 0;
+    int finali=indice;
+    int tamH = hilera.size();
+    for(int i=indice;i<tamH; i++) {
+        if(hilera[i]==')'){
+            finali=i;
+            i=tamH;
+        }
+    }
+    for(int i=0; i<tamH; i++) {
+        if(hilera[i]!='{' && contadorLlaves>=2) {
+                respuesta += hilera[i];
+        }
+        if(finali < i) {
+            i = hilera.size();
+        }
+        if(hilera[i] == '{') {
+            contadorLlaves++;
+        }
+        if(hilera[i] == '}') {
+            contadorLlaves--;
+            respuesta = "";
+        }
+    }
+    return respuesta;
 }
 string Analizador::conseguirHileraClase(string hilera,int indice) {
     int contadorLlaves = 0;
@@ -265,7 +451,13 @@ string Analizador::conseguirHileraCiclo(string hilera, int indice) {
             respuesta = "";
         }
         if(hilera[i] == ';') {
-            respuesta = "";
+            if(!(respuesta[0]=='f' && respuesta[1]=='o' && respuesta[2]=='r')){
+                cout<<"foor noo"<<endl;
+                respuesta = "";
+            }
+            else{
+                    cout<<"foor siii"<<endl;
+            }
         }
     }
     return respuesta;
@@ -347,6 +539,7 @@ string Analizador::generarAnalisis() {
         analisis += frecuenciaUsoMetodos(*it);
         analisis += metodosConHerencia(*it);
         analisis += metodosRecursivos(*it);
+        analisis += complejidadMetodos(*it);
         analisis += "\n";
     }
 
@@ -377,7 +570,7 @@ string Analizador::analizarMaximoAnidamiento(Nodo* n) {
     return "* Nivel de máximo anidamiento: " + NumberToString(anch.first) + " con un ancho de " + NumberToString(anch.second) + string("\n");
 }
 
-ArbolN Analizador::obtenerArbol() {
+ArbolAnalisis Analizador::obtenerArbol() {
     return arbolAnalizador;
 }
 
@@ -388,7 +581,7 @@ string Analizador::analizarMetodosMorfosis(Nodo* n) {
     vector<Nodo*>::iterator it = hij.begin(), itFin = hij.end(), it2, itFin2;
 
     for(; it!=itFin; it++) {
-        if((*it)->dato.first == 'M') {
+        if((*it)->obtenerId() == 'M') {
             vec.push_back(*it);
         }
     }
@@ -404,7 +597,7 @@ string Analizador::analizarMetodosMorfosis(Nodo* n) {
 
             for(; it2!=itFin2; it2++) {
                 if(*it != *it2) {
-                    respuesta += "* El método " + (*it)->obtenerNombreMetodo() + " y el método " + (*it2)->obtenerNombreMetodo() + " son iguales morfológicamente.\n";
+                    respuesta += "* El método " + (*it)->obtenerNombreMetodo() + " y el método " + (*it2)->obtenerNombreMetodo() + " son morfológicamente iguales.\n";
                     vec.erase(it);
                 }
             }
@@ -417,11 +610,11 @@ string Analizador::usoAtributosMetodos(Nodo* clase) {
     string respuesta="";
 
     int cantNodosMetodos=0;
-    vector<Nodo*> hijos = clase->obtenerHijos();
+    vector<Nodo*> hijos = clase->hijos;
     vector<Nodo *> metodos;
     int tamHijosClase = hijos.size();
     for(int i = 0; i < tamHijosClase; i++) {
-        if(hijos[i]->dato.first == 'M') {
+        if(hijos[i]->obtenerId() == 'M') {
             metodos.push_back(hijos[i]);
         }
     }
@@ -435,20 +628,6 @@ string Analizador::usoAtributosMetodos(Nodo* clase) {
 
     int cantidadNodosUsanAtributos = nodosUsanAtributos(arbolAnalizador, clase);
     respuesta += "* Cantidad de nodos que usan atributos: " + NumberToString(cantidadNodosUsanAtributos) + string("\n");
-    /*
-        if(cantidadNodosUsanAtributos < cantNodosMetodos) {
-            respuesta += "NO SE QUE DECIR1";
-        }
-        else {
-            if(cantidadNodosUsanAtributos > cantNodosMetodos) {
-                respuesta += "NO SE QUE DECIR2";
-            }
-            else {
-                if(cantidadNodosUsanAtributos == cantNodosMetodos) {
-                    respuesta += "NO SE QUE DECIR3";
-                }
-            }
-        }*/
     return respuesta;
 
 }
@@ -471,39 +650,22 @@ string Analizador::usoAtributosTotal(Nodo* clase) {
 
     int cantidadTotalNodos = arbolAnalizador.cantidadNodos(clase);
     respuesta += "* Cantidad total de nodos: " + NumberToString(cantidadTotalNodos-1) + "\n";
-    /*
-    int cantidadNodosUsanAtributos = nodosUsanAtributos(arbolAnalizador, clase);
-
-     if(cantidadNodosUsanAtributos < cantidadTotalNodos) {
-         respuesta += "NO SE QUE DECIR1.1";
-     }
-     else {
-         if(cantidadNodosUsanAtributos > cantidadTotalNodos) {
-             respuesta += "NO SE QUE DECIR2.1";
-         }
-         else {
-             if(cantidadNodosUsanAtributos == cantidadTotalNodos) {
-                 respuesta += "NO SE QUE DECIR3.1";
-             }
-         }
-     }
-    */
     return respuesta;
 }
 
-int Analizador::nodosUsanAtributos(ArbolN arbol, Nodo * clase) {
+int Analizador::nodosUsanAtributos(ArbolAnalisis arbol, Nodo * clase) {
     int cantidadNodosUsanAtributos = 0;
-    vector<Nodo*> hijos = clase->obtenerHijos();
+    vector<Nodo*> hijos = clase->hijos;
     vector<Nodo*> metodos;
     vector<Nodo*> atributos;
     int tamHijosClase = hijos.size();
-    
+
     for(int i =0; i<tamHijosClase; i++) {
-        if(hijos[i]->dato.first == 'M') {
+        if(hijos[i]->obtenerId() == 'M') {
             metodos.push_back(hijos[i]);
         }
         else {
-            if(hijos[i]->dato.first == 'A') {
+            if(hijos[i]->obtenerId() == 'A') {
                 atributos.push_back(hijos[i]);
             }
         }
@@ -511,9 +673,9 @@ int Analizador::nodosUsanAtributos(ArbolN arbol, Nodo * clase) {
     int tamMetodos = metodos.size();
     int tamAtributos = atributos.size();
     for(int i=0; i<tamAtributos; i++) {
-        string lineaAtr = atributos[i]->dato.second;
+        string lineaAtr = atributos[i]->obtenerCodigo();
         lineaAtr = conseguirUltimaParte(lineaAtr);
-        
+
         for(int j=0; j<tamMetodos; j++) {
             cantidadNodosUsanAtributos+=arbol.cantidadNodosCon(metodos[j],lineaAtr);
         }
@@ -523,13 +685,13 @@ int Analizador::nodosUsanAtributos(ArbolN arbol, Nodo * clase) {
 
 string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
     string respuesta = "* Análisis de llamados a métodos:\n";
-    vector<Nodo*> hijos = clase->obtenerHijos();
+    vector<Nodo*> hijos = clase->hijos;
     vector<Nodo*> metodos;
     vector<int> llamadosRespectivos;
     int tamHijosClase = hijos.size();
 
     for(int i =0; i<tamHijosClase; i++) {
-        if(hijos[i]->dato.first == 'M') {
+        if(hijos[i]->obtenerId() == 'M') {
             metodos.push_back(hijos[i]);
         }
     }
@@ -538,7 +700,7 @@ string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
         llamadosRespectivos.push_back(arbolAnalizador.contarNodosPorId(metodos[i], 'L'));
     }
     for(int i=0; i<tamMetodos; i++) {
-        respuesta += "-> Llamados a métodos en " +  metodos[i]->obtenerNombreMetodo() + ": " + NumberToString(llamadosRespectivos[i]) + "\n";
+        respuesta += "\t-> Llamados a métodos en " +  metodos[i]->obtenerNombreMetodo() + ": " + NumberToString(llamadosRespectivos[i]) + "\n";
     }
 
     return respuesta;
@@ -546,34 +708,34 @@ string Analizador::frecuenciaUsoMetodos(Nodo* clase) {
 
 string Analizador::metodosRecursivos(Nodo* clase) {
     string respuesta = "* Análisis de recursividad en métodos:\n";
-    vector<Nodo*> hijos = clase->obtenerHijos();
+    vector<Nodo*> hijos = clase->hijos;
     vector<Nodo*> metodos;
     int tamHijosClase = hijos.size();
-    
+
     for(int i =0; i<tamHijosClase; i++) {
-        if(hijos[i]->dato.first=='M') {
+        if(hijos[i]->obtenerId() == 'M') {
             metodos.push_back(hijos[i]);
         }
     }
-    
+
     int tamMetodos = metodos.size();
     string nombreMetodo = "";
     int cantidadLlamadosRecursicos;
     for(int i=0; i<tamMetodos; i++) {
         cantidadLlamadosRecursicos = 0;
         nombreMetodo = metodos[i]->obtenerNombreMetodoSinParentesis();
-        vector<Nodo*> hijosMet= metodos[i]->hijos;
+        vector<Nodo*> hijosMet = metodos[i]->hijos;
         int tamHijosMet = hijosMet.size();
-        
+
         for(int j=0; j<tamHijosMet; j++) {
             cantidadLlamadosRecursicos += arbolAnalizador.cantidadNodosConString(hijosMet[j], nombreMetodo+"(");
         }
         if(cantidadLlamadosRecursicos > 0) {
-            respuesta += "-> El método "+nombreMetodo+" es recursivo.\n";
+            respuesta += "\t-> El método "+nombreMetodo+" es recursivo.\n";
         }
         else {
             if(cantidadLlamadosRecursicos == 0) {
-                respuesta += "-> El método "+nombreMetodo+" NO es recursivo.\n";
+                respuesta += "\t-> El método "+nombreMetodo+" NO es recursivo.\n";
             }
         }
     }
@@ -596,4 +758,46 @@ string Analizador::metodosConHerencia(Nodo* clase) {
     return respuesta;
 }
 
+string Analizador::complejidadMetodos(Nodo* clase) {    
+    string respuesta = "* Análisis de complejidad de métodos:\n";
+    vector<Nodo*> hijos = clase->hijos;
+    vector<Nodo*> metodos;
+    int tamHijosClase = hijos.size();
+
+    for(int i =0; i<tamHijosClase; i++) {
+        if(hijos[i]->obtenerId() == 'M') {
+            metodos.push_back(hijos[i]);
+        }
+    }
+    int tamMetodos = metodos.size();
+    string param("int n");
+    string nomMet = "";
+    for(int i=0; i<tamMetodos; i++) {
+        nomMet = metodos[i]->obtenerNombreMetodo();
+        size_t encontrado = nomMet.find(param);
+        if (encontrado != string::npos){       
+            int n = arbolAnalizador.contarBAnidados(metodos[i]);
+            if(n>0)
+                respuesta += "\t->La complejidad de " + nomMet + " es O(n^" + NumberToString(n) + ").\n";
+        }
+        else{
+       //     int cantidadLlamadosRecursicos = 0;
+          //  string nombreMetodo = metodos[i]->obtenerNombreMetodoSinParentesis();
+           // vector<Nodo*> hijosMet = metodos[i]->hijos;
+           // int tamHijosMet = hijosMet.size();
+    /*
+            for(int j=0; j<tamHijosMet; j++) {
+                cantidadLlamadosRecursicos += arbolAnalizador.cantidadNodosConString(hijosMet[j], nombreMetodo+"(");
+            }
+            */
+           // if(cantidadLlamadosRecursicos > 0) {
+             //   respuesta += "\t-> El método "+ nomMet +" es recursivo, por tanto su complejidad es complicada de medir por métodos sencillos.\n";
+           // }else{
+                respuesta += "\t->La complejidad de " + nomMet + " no puede ser analizada.\n";
+           // }
+        }
+    }
+
+    return respuesta;
+}
 

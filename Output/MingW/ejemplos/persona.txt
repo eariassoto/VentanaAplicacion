@@ -1,0 +1,16 @@
+public class Persona{
+	string nombre;
+	string apellido;
+	int edad;
+	string getNombre(){
+		return nombre;
+	}
+	int getEdad(){
+		return nombre;
+	}
+}
+public class Auto{
+	void conducir(Persona p){
+		vroomvroom(p);
+	}
+}

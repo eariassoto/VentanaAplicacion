@@ -1,0 +1,30 @@
+class VehiculoRodante{
+	int mRuedas;
+	int mPasajeros;
+	void set_ruedas(int num){
+		this->mRuedas = num;
+	}
+
+	int get_ruedas(void){
+		return this->mRuedas;
+	}
+
+	void set_pasajeros(int num){
+		this->mPasajeros = num;
+	}
+
+	int get_pasajeros(void){
+		return this->mPasajeros;
+	}
+} 
+
+class Camion : public VehiculoRodante { 
+	int mCarga; 
+	void set_carga(int size){
+		this->mCarga = size; 
+	}
+
+	int get_carga(void) { 
+		return this->mCarga;
+	} 
+} 

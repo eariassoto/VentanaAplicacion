@@ -1,11 +1,11 @@
 object frmNewForm: TfrmNewForm
-  Left = 8
+  Left = 0
   Top = 8
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'VentanaAplicacion'
   ClientHeight = 462
-  ClientWidth = 729
+  ClientWidth = 737
   Color = clAppWorkSpace
   OldCreateOrder = True
   PopupMenu = DesignerPopup.Owner
