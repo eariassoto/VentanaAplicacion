@@ -117,8 +117,7 @@ void VentanaAplicacionFrm::CreateGUIControls()
 
 }
 
-void VentanaAplicacionFrm::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnQuit(wxCommandEvent& WXUNUSED(event)){
     Close(true);
 }
 
@@ -127,8 +126,7 @@ void VentanaAplicacionFrm::MostrarDialogo(string s, string t){
         dial->ShowModal();
 }
 
-void VentanaAplicacionFrm::OnSave(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnSave(wxCommandEvent& WXUNUSED(event)){
     if(txtAreaRes->GetValue() != "") {
         txtAreaRes->SaveFile("reporte.txt", wxTEXT_ALIGNMENT_DEFAULT);
         MostrarDialogo("El reporte se ha generado correctamente.", "Guardar Reporte");
@@ -138,53 +136,46 @@ void VentanaAplicacionFrm::OnSave(wxCommandEvent& WXUNUSED(event))
     }
 }
 
-void VentanaAplicacionFrm::OnReglas(wxCommandEvent& WXUNUSED(event))
-{
-        MostrarDialogo("Reglas requeridas para utilizar el analizador de codigo.\n 1.Debe ingresar codigo que compile.\n 2.Los ; de las instrucciones deben estar pegados a las mismas: correcto int x=0; incorrecto int x=0 ;. \n 3.Los switchs no estan permitidos. \n 4.No se permite declarar/inicializar en la misma linea: correcto int x=0; int y=0; incorrecto int x,y =0; \n 5.Debe utilizar llaves en sus clases, metodos, ciclos, if y else, y estas deben estar pegadas a la instruccion. \n 6.Los metodos: \n Deben ser solamente: \n \t public \n \t private \n \t static \n Y retornar: \n \t void \n \t short \n \t int \n \t float \n \t double \n \t long \n \t char \n \t bool \n \t string \n Se permite el uso de: \n \t std \n \t unsigned \n \t signed \n 8.Las clases solamente pueden ser o tener: \n \t public \n \t private \n \t static; \n \t class", "Reglas");
+void VentanaAplicacionFrm::OnReglas(wxCommandEvent& WXUNUSED(event)){
+    MostrarDialogo("Reglas requeridas para utilizar el analizador de codigo.\n 1.Debe ingresar codigo que compile.\n 2.Los ; de las instrucciones deben estar pegados a las mismas: correcto int x=0; incorrecto int x=0 ;. \n 3.Los switchs no estan permitidos. \n 4.No se permite declarar/inicializar en la misma linea: correcto int x=0; int y=0; incorrecto int x,y =0; \n 5.Debe utilizar llaves en sus clases, metodos, ciclos, if y else, y estas deben estar pegadas a la instruccion. \n 6.Los metodos: \n Deben ser solamente: \n \t public \n \t private \n \t static \n Y retornar: \n \t void \n \t short \n \t int \n \t float \n \t double \n \t long \n \t char \n \t bool \n \t string \n Se permite el uso de: \n \t std \n \t unsigned \n \t signed \n 8.Las clases solamente pueden ser o tener: \n \t public \n \t private \n \t static; \n \t class", "Reglas");
 }
 
 void VentanaAplicacionFrm::MostrarEjemplo(string s){
+    txtCodigo->SelectAll();
     long int begin, end;
 	txtCodigo->GetSelection(&begin, &end);
 	txtCodigo->Remove(begin, end);
     txtCodigo->LoadFile(s, wxTEXT_ALIGNMENT_DEFAULT);
 }
 
-void VentanaAplicacionFrm::OnPersona(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnPersona(wxCommandEvent& WXUNUSED(event)){
     MostrarEjemplo("ejemplos/persona.txt");
 }
 
-void VentanaAplicacionFrm::OnRecursivo(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnRecursivo(wxCommandEvent& WXUNUSED(event)){
     MostrarEjemplo("ejemplos/recursivo.txt");
 }
 
-void VentanaAplicacionFrm::OnHerencia(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnHerencia(wxCommandEvent& WXUNUSED(event)){
     MostrarEjemplo("ejemplos/herencia.txt");
 }
 
-void VentanaAplicacionFrm::OnComplejidad(wxCommandEvent& WXUNUSED(event))
-{
+void VentanaAplicacionFrm::OnComplejidad(wxCommandEvent& WXUNUSED(event)){
     MostrarEjemplo("ejemplos/complejidad.txt");
 }
 
-void VentanaAplicacionFrm::SetControlador(Controlador* c)
-{
+void VentanaAplicacionFrm::SetControlador(Controlador* c){
     this->controlador = c;
 }
 
-void VentanaAplicacionFrm::OnClose(wxCloseEvent& event)
-{
+void VentanaAplicacionFrm::OnClose(wxCloseEvent& event){
     Destroy();
 }
 
 /*
  * VentanaAplicacionFrmActivate
  */
-void VentanaAplicacionFrm::VentanaAplicacionFrmActivate(wxActivateEvent& event)
-{
+void VentanaAplicacionFrm::VentanaAplicacionFrmActivate(wxActivateEvent& event){
     // insert your code here
 }
 
@@ -192,8 +183,7 @@ void VentanaAplicacionFrm::VentanaAplicacionFrmActivate(wxActivateEvent& event)
 /*
  * btnAnalizarClick
  */
-void VentanaAplicacionFrm::btnAnalizarClick(wxCommandEvent& event)
-{
+void VentanaAplicacionFrm::btnAnalizarClick(wxCommandEvent& event){
     // insert your code here
     const char* codigo = txtCodigo->GetValue().ToStdString().c_str();
     controlador->SetArbol(arbol, txtAreaRes, codigo);
@@ -202,6 +192,5 @@ void VentanaAplicacionFrm::btnAnalizarClick(wxCommandEvent& event)
 /*
  * txtCodigoModified
  */
-void VentanaAplicacionFrm::txtCodigoModified(wxStyledTextEvent& event)
-{
+void VentanaAplicacionFrm::txtCodigoModified(wxStyledTextEvent& event){
 }

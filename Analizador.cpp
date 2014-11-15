@@ -772,32 +772,35 @@ string Analizador::complejidadMetodos(Nodo* clase) {
     int tamMetodos = metodos.size();
     string param("int n");
     string nomMet = "";
+    int cantidadLlamadosRecursicos;
+    string nombreMetodo;
     for(int i=0; i<tamMetodos; i++) {
-        nomMet = metodos[i]->obtenerNombreMetodo();
-        size_t encontrado = nomMet.find(param);
-        if (encontrado != string::npos){       
-            int n = arbolAnalizador.contarBAnidados(metodos[i]);
-            if(n>0)
-                respuesta += "\t->La complejidad de " + nomMet + " es O(n^" + NumberToString(n) + ").\n";
+        cantidadLlamadosRecursicos = 0;
+        nombreMetodo = metodos[i]->obtenerNombreMetodoSinParentesis();
+        
+        vector<Nodo*> hijosMet = metodos[i]->hijos;
+        int tamHijosMet = hijosMet.size();
+
+        for(int j=0; j<tamHijosMet; j++) {
+            cantidadLlamadosRecursicos += arbolAnalizador.cantidadNodosConString(hijosMet[j], nombreMetodo+"(");
         }
-        else{
-       //     int cantidadLlamadosRecursicos = 0;
-          //  string nombreMetodo = metodos[i]->obtenerNombreMetodoSinParentesis();
-           // vector<Nodo*> hijosMet = metodos[i]->hijos;
-           // int tamHijosMet = hijosMet.size();
-    /*
-            for(int j=0; j<tamHijosMet; j++) {
-                cantidadLlamadosRecursicos += arbolAnalizador.cantidadNodosConString(hijosMet[j], nombreMetodo+"(");
+        if(cantidadLlamadosRecursicos > 0) {
+            respuesta += "\t-> Como "+nombreMetodo+" es recursivo su nivel de complejidad es complicado de medir para unos simples mortales como nosotros.\n";
+        }else{
+            nomMet = metodos[i]->obtenerNombreMetodo();
+            size_t encontrado = nomMet.find(param);
+            if (encontrado != string::npos){  
+                int n = arbolAnalizador.contarBAnidados(metodos[i]);
+                if(n>0)
+                    respuesta += "\t->La complejidad de " + nomMet + " es O(n^" + NumberToString(n) + ").\n";
+                else
+                    respuesta += "\t->La complejidad de " + nomMet + " es O(1).\n";
             }
-            */
-           // if(cantidadLlamadosRecursicos > 0) {
-             //   respuesta += "\t-> El método "+ nomMet +" es recursivo, por tanto su complejidad es complicada de medir por métodos sencillos.\n";
-           // }else{
-                respuesta += "\t->La complejidad de " + nomMet + " no puede ser analizada.\n";
-           // }
-        }
+            else{    
+                respuesta += "\t->La complejidad de " + nomMet + " no puede ser analizada puesto que no tenemos las herramientas complejas necesarias.\n";
+            }
+        }       
     }
 
     return respuesta;
 }
-
